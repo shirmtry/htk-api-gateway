@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>HTK Gateway — Case Study</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 15mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Inter", Arial, sans-serif;
+    color: #15202f;
+    font-size: 10pt;
+    line-height: 1.52;
+  }
+  h1, h2, h3 { color: #0b1220; margin: 0; }
+  h1 { font-size: 29pt; letter-spacing: -0.5pt; line-height: 1.1; }
+  h2 {
+    font-size: 14.5pt;
+    margin: 0 0 9pt;
+    padding-bottom: 5pt;
+    border-bottom: 2px solid #0ea5e9;
+  }
+  h3 { font-size: 10.8pt; margin: 11pt 0 4pt; }
+  p { margin: 0 0 6.5pt; }
+  ul, ol { margin: 0 0 7pt 15pt; padding: 0; }
+  li { margin-bottom: 2.5pt; }
+  code {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    background: #eef4fa;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 8.8pt;
+  }
+  .sheet { page-break-after: always; min-height: 254mm; }
+  .sheet:last-child { page-break-after: auto; }
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 258mm;
+  }
+  .eyebrow {
+    font-size: 8.8pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #0284c7;
+    font-weight: 700;
+  }
+  .cover-rule { width: 64pt; height: 4pt; background: #0ea5e9; margin: 17pt 0; }
+  .cover-sub { font-size: 12.5pt; color: #334155; max-width: 135mm; }
+  .meta { font-size: 10pt; color: #475569; }
+  .meta strong { color: #0b1220; }
+  .arch {
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 7.7pt;
+    line-height: 1.42;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8pt 10pt;
+    white-space: pre;
+    margin: 6pt 0 8pt;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 5pt 0 9pt; font-size: 9.1pt; }
+  th, td { text-align: left; padding: 4pt 6pt; border-bottom: 1px solid #dbe3ee; vertical-align: top; }
+  th { background: #f1f5f9; color: #0b1220; }
+  .note {
+    background: #f0f9ff;
+    border-left: 3px solid #0ea5e9;
+    padding: 6.5pt 9pt;
+    margin: 7pt 0;
+    color: #0f2a43;
+  }
+  .warn {
+    background: #fff7ed;
+    border-left: 3px solid #f59e0b;
+    padding: 6.5pt 9pt;
+    margin: 7pt 0;
+    color: #57350a;
+  }
+  .compact { font-size: 9.5pt; line-height: 1.46; }
+  .compact h2 { margin-bottom: 7pt; }
+  .compact h3 { margin: 8pt 0 3pt; }
+  .compact p { margin-bottom: 5pt; }
+  .compact table { margin: 4pt 0 7pt; }
+  .compact th, .compact td { padding: 3pt 5pt; }
+  .compact li { margin-bottom: 2pt; }
+  .kpi { border: 1px solid #dbe3ee; border-radius: 6px; padding: 7pt 9pt; }
+  .kpi b { display: block; font-size: 15pt; color: #0284c7; }
+  .kpi span { font-size: 8.4pt; color: #475569; }
+  .small { font-size: 8.6pt; color: #475569; }
+  .flow {
+    border: 1px solid #dbe3ee;
+    border-radius: 6px;
+    padding: 7pt 9pt;
+    margin: 6pt 0;
+    background: #fbfdff;
+  }
+  .flow b { color: #0369a1; }
+  .tag {
+    display: inline-block;
+    font-size: 8.2pt;
+    border: 1px solid #bae6fd;
+    color: #0369a1;
+    border-radius: 999px;
+    padding: 1px 7px;
+    margin-right: 4pt;
+    background: #f0f9ff;
+  }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8pt; margin: 7pt 0 9pt; }
+</style>
+</head>
+<body>
+
+<section class="sheet cover">
+  <div>
+    <p class="eyebrow">Case Study · HTK 0396241674</p>
+    <div class="cover-rule"></div>
+    <h1>HTK Gateway</h1>
+    <p class="cover-sub">
+      Cửa ngõ API có API key băm SHA-256, token bucket theo key và endpoint, hạn mức tháng, log bất
+      đồng bộ có giới hạn và dashboard 15 phút đo throughput, error rate, p95.
+    </p>
+    <p style="margin-top:14pt">
+      <span class="tag">Next.js 15</span>
+      <span class="tag">React 19</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">PGlite</span>
+      <span class="tag">Vercel Blob</span>
+      <span class="tag">Vitest</span>
+    </p>
+  </div>
+  <div>
+    <p class="meta">
+      <strong>Tác giả:</strong> HTK 0396241674<br />
+      <strong>Ngày:</strong> 11/11/2026<br />
+      <strong>Phạm vi:</strong> dự án 09/10 trong portfolio full-stack — nhóm Commercial SaaS &amp; Dev Tools<br />
+      <strong>Live:</strong> https://htk-api-gateway.vercel.app
+    </p>
+    <div class="cover-rule" style="margin-bottom:0"></div>
+    <p class="small">
+      Tài liệu gồm 6 trang: bài toán, kiến trúc đường nóng, giới hạn hai tầng và quan sát, đánh đổi
+      kèm số đo tải thật, và bài học sau khi triển khai.
+    </p>
+  </div>
+</section>
+
+<section class="sheet">
+  <h2>1. Bài toán</h2>
+  <p>
+    Một API công khai thường hỏng ở ba điểm rất cụ thể: key bị lộ vẫn dùng được mãi, một client bắn
+    quá nhanh làm nghẽn backend, và khi có sự cố thì không ai biết request nào chậm hay lỗi ở tầng nào.
+    Ba vấn đề này thường được vá bằng ba dịch vụ khác nhau, mỗi dịch vụ có cấu hình riêng và không
+    chia sẻ cùng một nguồn số liệu.
+  </p>
+  <p>
+    HTK Gateway gộp chúng vào một lớp cửa ngõ nhỏ: cấp và thu hồi key, giới hạn hai tầng (burst theo
+    key + endpoint và hạn mức tháng), ghi log mọi request, rồi đọc chính log đó thành dashboard vận
+    hành. Mục tiêu không phải thay thế Kong hay Envoy, mà là <em>làm cho các đánh đổi của một gateway
+    trở nên đọc được và đo được</em> trong một repo.
+  </p>
+
+  <h3>Bốn kiểu thất bại cần chặn</h3>
+  <ol>
+    <li><strong>Key lộ không thu hồi được.</strong> Secret lưu dạng plaintext hoặc cache vĩnh viễn khiến việc thu hồi phải chờ hết TTL.</li>
+    <li><strong>Giới hạn sai đơn vị.</strong> Chỉ đếm theo phút thì client có thể dồn 100 request trong 1 giây rồi nghỉ; chỉ đếm theo tháng thì không chặn được burst.</li>
+    <li><strong>Log nằm trên đường nóng.</strong> Ghi DB đồng bộ trong mỗi request biến gateway thành proxy chậm và tạo điểm nghẽn khi tải tăng.</li>
+    <li><strong>Mù vận hành.</strong> Không có error rate, p95 hay danh sách endpoint lỗi thì việc chỉnh giới hạn chỉ là phỏng đoán.</li>
+  </ol>
+
+  <h3>Yêu cầu và ràng buộc</h3>
+  <table>
+    <tr><th style="width:34%">Yêu cầu</th><th>Cách hiện thực</th></tr>
+    <tr><td>Key một lần hiển thị</td><td>Sinh <code>htk_live_&lt;base64url&gt;</code>; lưu SHA-256; trả secret đúng một lần khi tạo.</td></tr>
+    <tr><td>Giới hạn hai tầng</td><td>Token bucket theo cặp key + endpoint; quota tháng UTC theo key; 429 phân biệt <code>rate_limited</code> và <code>quota_exceeded</code>.</td></tr>
+    <tr><td>Đường nóng không chờ DB</td><td>Cache key/endpoint 3 giây; bucket và quota trong bộ nhớ; log đẩy vào buffer rồi flush theo lô.</td></tr>
+    <tr><td>Quan sát được</td><td>request/phút, RPS, error rate, p50/p95, biểu đồ 15 phút, top endpoint, 20 log gần nhất, <code>droppedLogs</code>.</td></tr>
+    <tr><td>An toàn upstream</td><td>Bắt buộc HTTPS, chặn localhost và dải IP nội bộ, body tối đa 128 KB, timeout theo endpoint.</td></tr>
+    <tr><td>Nhiều tài khoản</td><td>Key, endpoint và log lọc theo <code>user_id</code>; tài nguyên của người khác trả 404.</td></tr>
+  </table>
+
+  <h3>Tiêu chí thành công</h3>
+  <ul>
+    <li>Thu hồi key xong, request kế tiếp trả 401 ngay trên instance đang phục vụ.</li>
+    <li>Vượt burst trả 429 kèm <code>retry-after</code> đúng khoảng cần chờ; request bị từ chối không tiêu token.</li>
+    <li>Tải 20.000 request với concurrency 200 vẫn trả đủ 200 và không mất log đã nhận vào buffer.</li>
+    <li>Dashboard hiển thị số liệu từ log thật, không có ô “đang cập nhật” hay số liệu ước lượng.</li>
+  </ul>
+
+  <div class="note">
+    Phạm vi demo là một workspace, 3 endpoint sandbox, 96 log seed trong 14 phút. Đây là quy mô đủ để
+    chứng minh cơ chế và đọc được số liệu, không phải tuyên bố về năng lực chịu tải toàn cụm.
+  </div>
+</section>
+
+<section class="sheet">
+  <h2>2. Giải pháp — kiến trúc đường nóng</h2>
+
+<pre class="arch">
+Client (curl, SDK, browser playground)
+  |  Authorization: Bearer htk_live_...
+  v
+Next.js 15 route /api/gw/[slug]  (GET POST PUT PATCH DELETE)
+  |
+  +-- 1. parse Bearer -> key cache 3s -> api_keys (hash) -> 401 invalid_key
+  +-- 2. endpoint cache 3s -> ownership -> enabled flag
+  +-- 3. token bucket (key + endpoint, in-memory) -> 429 rate_limited
+  +-- 4. monthly quota (UTC YYYY-MM, in-memory) -> 429 quota_exceeded
+  +-- 5. body cap 128 KB -> sandbox hoặc live upstream (SSRF guard, timeout)
+  +-- 6. queueGatewayLog(...) -> push buffer -> response ngay
+  |
+  v  after() của Next.js
+flushGatewayLogs(): 500 dòng/lô x 20 lô, hẹn 25 ms nếu còn tồn
+  |  json_populate_recordset vào gateway_logs
+  |  cộng delta quota, prune 3.000 dòng/user, snapshot Blob mỗi 10 s
+  v
+PGlite (PostgreSQL WASM) + Vercel Blob private state/api-gateway.json
+</pre>
+
+  <p>
+    Đường nóng chỉ chạm DB khi cache key hoặc endpoint hết hạn, và không bao giờ chờ ghi log. Response
+    mang theo <code>x-request-id</code>, <code>x-gateway-key</code>,
+    <code>x-ratelimit-limit/remaining/reset</code> và <code>x-quota-remaining</code> để client tự điều
+    chỉnh mà không cần đọc tài liệu.
+  </p>
+
+  <h3>Token bucket: vì sao từ chối không tiêu token</h3>
+  <p>
+    Mỗi bucket có <code>capacity</code> (burst) và <code>refillPerSec</code> (tốc độ bền). Khi request
+    đến, token được nạp thêm theo thời gian trôi qua, rồi mới trừ. Nếu không đủ token, trạng thái
+    <strong>không bị trừ</strong>; server trả <code>retry-after = ceil(thiếu / refill × 1000)</code>.
+    Nhờ vậy một client backoff đúng hướng dẫn sẽ thành công ngay lần kế tiếp thay vì bị phạt thêm.
+  </p>
+  <p>
+    Quota tháng đứng sau bucket và có bộ đếm riêng theo kỳ <code>YYYY-MM</code> UTC. Chạm hạn mức trả
+    429 <code>quota_exceeded</code>, không đụng bucket — hai tầng độc lập nên có thể giải thích chính
+    xác client bị chặn vì nhanh hay vì hết hạn mức.
+  </p>
+
+  <h3>Key và cache</h3>
+  <ul>
+    <li>Secret 13 ký tự đầu được lưu để hiển thị nhận diện; phần còn lại không thể khôi phục.</li>
+    <li>Tra key bằng SHA-256 trên cột <code>key_hash</code> có unique index; cache 3 giây theo hash.</li>
+    <li>Thu hồi key gọi <code>forgetApiKey</code> xoá cache ngay, nên request kế tiếp trên cùng instance trả 401.</li>
+    <li>Key đã thu hồi vẫn giữ hàng trong DB để log cũ còn tham chiếu và để hiển thị lịch sử.</li>
+  </ul>
+
+  <h3>Upstream: sandbox trước, live sau</h3>
+  <p>
+    Ba upstream sandbox (<code>echo</code>, <code>slow</code> 35 ms, <code>fail</code> 503) cho phép
+    thử toàn bộ luồng mà không cần backend. Live upstream bắt buộc HTTPS, phân giải và chặn
+    <code>localhost</code>, <code>*.local</code>, <code>*.internal</code>, các dải
+    <code>127/10/192.168/169.254/172.16–31</code>, <code>::1</code>, <code>fc/fd/fe80</code>, và URL
+    chứa credential. Header chuyển tiếp bị giới hạn; <code>Authorization</code> và <code>Cookie</code>
+    của client không bao giờ đi tiếp.
+  </p>
+</section>
+
+<section class="sheet">
+  <h2>3. Giải pháp — log bất đồng bộ và khả năng quan sát</h2>
+
+  <div class="flow">
+    <b>Luồng một request</b><br />
+    Bearer → key → endpoint → bucket → quota → body cap → upstream → response → push log vào buffer →
+    <code>after()</code> flush. Client nhận response trước khi log chạm DB.
+  </div>
+
+  <h3>Hàng đợi có giới hạn thay vì hàng đợi vô hạn</h3>
+  <p>
+    Buffer giữ tối đa 8.000 dòng. Khi đầy, dòng cũ nhất bị bỏ và bộ đếm <code>droppedLogs</code> tăng;
+    con số này hiện trên dashboard và trong <code>/api/health</code>. Đây là lựa chọn có chủ ý: thà
+    mất log cũ và <em>nói ra</em> còn hơn phình bộ nhớ rồi chết cả instance. Flush chạy theo lô 500
+    dòng, tối đa 20 lô mỗi lượt, và tự hẹn lượt tiếp sau 25 ms nếu vẫn còn tồn — lỗi phát hiện khi
+    tải cho thấy bản đầu chỉ chạy 4 lô rồi dừng, để lại 6.500 dòng kẹt trong buffer.
+  </p>
+
+  <h3>Ghi theo lô và giữ chỗ theo người dùng</h3>
+  <ul>
+    <li>Một lệnh <code>json_populate_recordset</code> ghi cả lô, không phải 500 INSERT rời.</li>
+    <li>Delta quota được cộng dồn trong bộ nhớ và áp một lần mỗi lô; nếu instance khác đã tăng quota, phép trừ phần đã cộng tránh nhân đôi.</li>
+    <li>Retention dùng <code>row_number() over (partition by user_id order by created_at desc)</code> giữ 3.000 dòng mỗi người — thay cho bản đầu cắt 5.000 dòng toàn cục vốn xoá mất log seed của workspace demo.</li>
+  </ul>
+
+  <h3>Dashboard đọc từ log, không phải từ ước lượng</h3>
+  <table>
+    <tr><th style="width:32%">Chỉ số</th><th>Cách tính</th></tr>
+    <tr><td>Request/phút, RPS</td><td>Đếm log trong 60 giây gần nhất; RPS = số request / độ dài cửa sổ.</td></tr>
+    <tr><td>Error rate</td><td>Tỉ lệ status ≥ 500 trên tổng request 15 phút.</td></tr>
+    <tr><td>p50 / p95</td><td>Percentile trên <code>latency_ms</code> của log 15 phút, lấy mẫu trong bộ nhớ sau khi flush.</td></tr>
+    <tr><td>Biểu đồ 15 phút</td><td>15 cột theo phút; phần đỏ là request lỗi trong cùng phút.</td></tr>
+    <tr><td>Sức khoẻ buffer</td><td><code>droppedLogs</code> và số dòng còn chờ flush.</td></tr>
+  </table>
+
+  <h3>Bảo vệ control plane</h3>
+  <ul>
+    <li>Login: 20 lần/phút theo IP và 10 lần/300 giây theo email; đăng ký 10 lần/giờ.</li>
+    <li>Tạo key và endpoint: 30 lần/phút mỗi user.</li>
+    <li>Session cookie httpOnly, SameSite=Lax, 7 ngày; mật khẩu scrypt với salt riêng từng người.</li>
+    <li>Mọi input qua zod: slug <code>[a-z0-9-]</code>, timeout 100–30.000 ms, capacity/refill/quota có trần, body JSON giới hạn.</li>
+  </ul>
+
+  <div class="warn">
+    Giới hạn có chủ ý: bucket và quota là bộ nhớ từng instance. Trên Vercel nhiều lambda, giới hạn
+    hiệu dụng có thể cao hơn cấu hình vì mỗi instance đếm riêng. Muốn chính xác toàn cụm phải thay
+    bằng Redis; key, endpoint, log và dashboard giữ nguyên.
+  </div>
+</section>
+
+<section class="sheet compact">
+  <h2>4. Đánh đổi, số đo thật và điểm chưa hoàn thiện</h2>
+
+  <div class="kpis">
+    <div class="kpi"><b>1.009,6</b><span>request/giây · 200 concurrency</span></div>
+    <div class="kpi"><b>241,0 ms</b><span>p95 · 20.000 request, 0 lỗi</span></div>
+    <div class="kpi"><b>0</b><span>log bị bỏ trong lúc tải</span></div>
+  </div>
+
+  <h3>Ba đánh đổi có chủ ý</h3>
+  <table>
+    <tr><th style="width:26%">Đánh đổi</th><th>Được</th><th>Mất</th></tr>
+    <tr>
+      <td>Trạng thái giới hạn trong bộ nhớ</td>
+      <td>Đường nóng không chạm DB; p95 không phụ thuộc kho dữ liệu</td>
+      <td>Nhiều instance đếm riêng; giới hạn thực tế cao hơn cấu hình</td>
+    </tr>
+    <tr>
+      <td>Log bất đồng bộ</td>
+      <td>Throughput không bị ghi log kéo xuống; response trả ngay</td>
+      <td>Có thể mất tối đa một lô khi instance bị kill đột ngột</td>
+    </tr>
+    <tr>
+      <td>Quota ghi sau</td>
+      <td>Không UPDATE một hàng mỗi request</td>
+      <td>Snapshot trễ vài giây; số dư hiển thị có thể lệch tạm thời</td>
+    </tr>
+  </table>
+
+  <h3>Số đo thật</h3>
+  <table>
+    <tr><th>Phép đo</th><th>Kết quả</th></tr>
+    <tr><td>Tải 20.000 request, concurrency 200, keep-alive</td><td>19,81 s · <strong>1.009,6 req/s</strong> · 20.000/20.000 status 200 · 0 lỗi</td></tr>
+    <tr><td>Latency dưới tải</td><td>p50 <strong>196,6 ms</strong> · p95 <strong>241,0 ms</strong> · p99 <strong>267,8 ms</strong></td></tr>
+    <tr><td>Log sau tải</td><td>3.596 dòng trong DB · <code>droppedLogs = 0</code> · retention cắt còn 3.000 dòng/user</td></tr>
+    <tr><td>Seed dashboard</td><td>96 request/14 phút · 9 lỗi 503 · 6 lần 429 · top endpoint <code>orders</code></td></tr>
+    <tr><td>Rate limit login</td><td>10 lần sai trả 401, 2 lần kế tiếp trả 429</td></tr>
+    <tr><td>Kiểm thử tự động</td><td>32 test pass: 8 bucket/quota, 8 gateway/SSRF, 16 tích hợp PGlite</td></tr>
+  </table>
+
+  <p class="small">
+    Đo trên máy local (Windows, Node 24, <code>next start</code> production build). Script
+    <code>scripts/stress.mjs</code> tự đăng ký user, tạo endpoint và key riêng, warmup 400 request,
+    chạy tải, rồi thu hồi key và xoá endpoint — không dùng dữ liệu demo. Chưa đo trên Vercel nhiều
+    lambda.
+  </p>
+
+  <h3>Điểm chưa hoàn thiện</h3>
+  <ul>
+    <li><strong>Giới hạn theo instance.</strong> Cần Redis hoặc token bucket phân tán để chính xác toàn cụm; hiện chỉ đúng với một instance.</li>
+    <li><strong>Mất log khi kill đột ngột.</strong> <code>droppedLogs</code> chỉ đếm phần bị đẩy khỏi buffer, không đếm phần mất theo tiến trình.</li>
+    <li><strong>Chưa có streaming export.</strong> Export log và metrics chưa có; dashboard chỉ đọc cửa sổ 15 phút.</li>
+    <li><strong>Chưa phân quyền vai trò.</strong> Mỗi tài khoản là một workspace; chưa có owner/viewer cho team.</li>
+    <li><strong>PGlite một writer.</strong> Phù hợp demo và tải nhỏ; ghi đồng thời quy mô lớn cần PostgreSQL thật.</li>
+    <li><strong>Tải đo trên một máy.</strong> Con số 1.009,6 req/s là dev machine, không phải cam kết production.</li>
+  </ul>
+
+  <div class="note">
+    Một lỗi thật đã sửa nhờ đo: stress lần đầu để 6.500 log kẹt trong buffer vì flush dừng sau 4 lô.
+    Tăng lên 20 lô và thêm lượt hẹn 25 ms đưa <code>droppedLogs</code> về 0 ở lần chạy sau — đây là
+    loại lỗi chỉ số đo mới cho thấy.
+  </div>
+</section>
+
+<section class="sheet compact">
+  <h2>5. Bài học</h2>
+
+  <h3>Đường nóng và đường ghi là hai bài toán khác nhau</h3>
+  <p>
+    Gộp log vào request là cách nhanh nhất để có dữ liệu, nhưng cũng là cách nhanh nhất để p95 phụ
+    thuộc DB. Tách buffer khỏi request buộc phải đối mặt với câu hỏi khó hơn: khi buffer đầy thì làm
+    gì? Câu trả lời tốt không phải “tăng buffer”, mà là đặt trần, bỏ dòng cũ và hiển thị số đã bỏ.
+  </p>
+
+  <h3>Giới hạn phải giải thích được lý do bị chặn</h3>
+  <p>
+    Token bucket và quota là hai tầng độc lập vì chúng trả lời hai câu hỏi khác nhau: “bạn đang gửi
+    quá nhanh” và “bạn đã dùng hết hạn mức tháng”. Nếu gộp, client chỉ nhận 429 và không biết chờ bao
+    lâu hay nâng gói. Từ chối không tiêu token là chi tiết nhỏ nhưng biến header
+    <code>retry-after</code> thành lời hứa đúng.
+  </p>
+
+  <h3>Số liệu phải đến từ log thật</h3>
+  <p>
+    Dashboard không có ô ước lượng. Mọi con số đều tính từ hàng <code>gateway_logs</code> đã flush,
+    kể cả <code>droppedLogs</code>. Nhờ vậy khi stress cho ra 1.009,6 req/s và 0 lỗi, đó là kết quả
+    của 20.000 response thật, không phải suy diễn từ cấu hình.
+  </p>
+
+  <h3>Retention toàn cục là bẫy dữ liệu mẫu</h3>
+  <p>
+    Bản đầu giữ 5.000 dòng mới nhất toàn hệ thống. Sau một lần stress, log seed của workspace demo bị
+    đẩy ra ngoài và dashboard mẫu trống. Chuyển sang giữ 3.000 dòng mỗi người vừa bảo vệ dữ liệu mẫu,
+    vừa công bằng hơn khi nhiều tài khoản cùng chạy.
+  </p>
+
+  <h3>Điều sẽ làm tiếp</h3>
+  <ul>
+    <li>Đưa bucket/quota sang Redis để giới hạn đúng khi chạy nhiều instance.</li>
+    <li>Thêm export log có phân trang và cửa sổ thời gian tuỳ chọn.</li>
+    <li>Thêm vai trò owner/viewer và audit cho thao tác thu hồi key.</li>
+    <li>Đo lại trên Vercel với nhiều lambda để công bố p95 thật của môi trường production.</li>
+  </ul>
+</section>
+
+</body>
+</html>
